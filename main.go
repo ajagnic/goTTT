@@ -119,8 +119,7 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 	}
 	moveIndex := 0
 	if p.ai {
-		rand.Seed(time.Now().UnixNano()) // temp
-		moveIndex = rand.Intn(9) + 1
+		moveIndex = aiGenerateNextMove(*allMoves)
 	} else { // Human input
 		passCnt := 0
 		moveIndex = inputHelper(p.char)
@@ -157,6 +156,12 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 		}
 	}
 	return false
+}
+
+func aiGenerateNextMove(allMoves []int) int {
+	prepMoves := allMoves[1:]
+	fmt.Println(prepMoves)
+	return 5
 }
 
 func inputHelper(playerName string) int {
