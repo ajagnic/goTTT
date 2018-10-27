@@ -1,6 +1,3 @@
-//TODO: AI opponent
-// 3. Process for AI to input moves
-// 4. Ability to make smart moves
 package main
 
 import (
