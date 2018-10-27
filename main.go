@@ -119,7 +119,7 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 	}
 	moveIndex := 0
 	if p.ai {
-		moveIndex = aiGenerateNextMove(*allMoves)
+		moveIndex = p.aiGenerateNextMove(*allMoves, xWinset, yWinset, dWinset)
 	} else { // Human input
 		passCnt := 0
 		moveIndex = inputHelper(p.char)
@@ -145,9 +145,9 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 	p.moveset = append(p.moveset, moveIndex)
 	p.turnCnt++
 	if p.turnCnt > 2 {
-		dWin := comparator(dWinset, p.moveset)
-		xWin := comparator(xWinset, p.moveset)
-		yWin := comparator(yWinset, p.moveset)
+		dWin, _ := comparator(dWinset, p.moveset, false)
+		xWin, _ := comparator(xWinset, p.moveset, false)
+		yWin, _ := comparator(yWinset, p.moveset, false)
 		if dWin || xWin || yWin {
 			p.win = true
 			return true
@@ -158,10 +158,39 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 	return false
 }
 
-func aiGenerateNextMove(allMoves []int) int {
+func (ai *player) aiGenerateNextMove(allMoves []int, xSet, ySet, dSet [3][3]int) int { // REVISE, BETTER WAY
 	prepMoves := allMoves[1:]
 	fmt.Println(prepMoves)
-	return 5
+	// Check Win Condition
+	res, matches := ai.CheckCanWin(xSet, ySet, dSet)
+	fmt.Println(res, matches)
+	switch res {
+	case 0:
+		rand.Seed(time.Now().UnixNano()) // NOTE: TEMP
+		return rand.Intn(8) + 1
+	case 1:
+		// xwin
+	case 2:
+		// ywin
+	case 3:
+		// dwin
+	}
+	return 0
+}
+
+func (ai *player) CheckCanWin(xSet, ySet, dSet [3][3]int) (int, []int) {
+	canWinX, xMtch := comparator(xSet, ai.moveset, true)
+	canWinY, yMtch := comparator(ySet, ai.moveset, true)
+	canWinD, dMtch := comparator(dSet, ai.moveset, true)
+	if canWinX {
+		return 1, xMtch
+	} else if canWinY {
+		return 2, yMtch
+	} else if canWinD {
+		return 3, dMtch
+	} else {
+		return 0, []int{}
+	}
 }
 
 func inputHelper(playerName string) int {
@@ -181,20 +210,27 @@ func inputHelper(playerName string) int {
 	return moveIndex
 }
 
-func comparator(winset [3][3]int, moveset []int) bool {
+func comparator(winset [3][3]int, moveset []int, aiCheckFlag bool) (bool, []int) {
 	// Returns true if moves match a single row in winset (3 in a row).
 	for _, row := range winset {
 		matchCnt := 0
+		matches := []int{}
 		for _, val := range row {
 			for _, move := range moveset {
 				if val == move {
 					matchCnt++
+					matches = append(matches, move)
 				}
 			}
 		}
+		if aiCheckFlag {
+			if matchCnt == 2 {
+				return true, matches
+			}
+		}
 		if matchCnt == 3 {
-			return true
+			return true, matches
 		}
 	}
-	return false
+	return false, []int{}
 }
