@@ -38,7 +38,6 @@ func main() {
 			winFlag = p2.collectPlayAndCheckWin(&allMoves)
 			displayGame(p1, p2)
 		}
-		// displayGame(p1, p2)
 	}
 	if p1.win {
 		fmt.Println(p1.char, " Wins!")
@@ -155,7 +154,7 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 	return false
 }
 
-func (ai *player) aiGenerateNextMove(allMoves []int, xSet, ySet, dSet [3][3]int) int { // REVISE, BETTER WAY
+func (ai *player) aiGenerateNextMove(allMoves []int, xSet, ySet, dSet [3][3]int) int {
 	prepMoves := allMoves[1:]
 	fmt.Println(prepMoves)
 	// Check Win Condition
