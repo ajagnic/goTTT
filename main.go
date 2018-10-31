@@ -122,6 +122,9 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 		fmt.Println("All Moves: ", *allMoves)
 		fmt.Println("My moves: ", p.moveset)
 		fmt.Println("Your moves: ", oppMoves)
+		rand.Seed(time.Now().UnixNano())
+		moveIndex = rand.Intn(9) + 1
+		fmt.Println("Made move: ", moveIndex)
 	} else { // Human input
 		passCnt := 0
 		moveIndex = inputHelper(p.char)
@@ -161,7 +164,9 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 }
 
 func test() {
-	// NOTE: TEMP
+	// e. players moves
+	// available moves/spaces
+	// check win state
 }
 
 func inputHelper(playerName string) int {
