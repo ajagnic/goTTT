@@ -32,10 +32,10 @@ func main() {
 	p1, p2 := generatePlayersRandomStart(aiFlag)
 	winFlag := false
 	for winFlag == false { // Turn management
-		winFlag = p1.collectPlayAndCheckWin(&allMoves)
+		winFlag = p1.collectPlayAndCheckWin(&allMoves, p2.moveset)
 		displayGame(p1, p2)
 		if winFlag == false {
-			winFlag = p2.collectPlayAndCheckWin(&allMoves)
+			winFlag = p2.collectPlayAndCheckWin(&allMoves, p1.moveset)
 			displayGame(p1, p2)
 		}
 	}
@@ -56,17 +56,18 @@ func generatePlayersRandomStart(aiFlag *bool) (player, player) {
 	randRes := rand.Intn(2)
 	p1Char, p2Char := "X", "O"
 	if randRes == 1 {
-		p1Char, p2Char = "O", "X"
+		//p1Char, p2Char = "O", "X" // NOTE: TEMP
 	}
-	p1 := player{[]int{}, 0, false, p1Char, false}
-	p2 := player{[]int{}, 0, false, p2Char, false}
+	p1 := player{[]int{1, 3, 5}, 0, false, p1Char, false} // NOTE: sim near-win
+	p2 := player{[]int{2, 6, 7}, 0, false, p2Char, false} //
 	if *aiFlag {
-		anoRes := rand.Intn(2)
-		if anoRes == 1 {
-			p1.ai = true
-		} else {
-			p2.ai = true
-		}
+		p2.ai = true
+		// anoRes := rand.Intn(2) // NOTE: TEMP
+		// if anoRes == 1 {
+		// 	p1.ai = true
+		// } else {
+		// 	p2.ai = true
+		// }
 	}
 	return p1, p2
 }
@@ -97,7 +98,7 @@ func displayHelper(charset *[3][3]string, moveset []int, playChar string) {
 	}
 }
 
-func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
+func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 	xWinset := [3][3]int{
 		{1, 2, 3},
 		{4, 5, 6},
@@ -115,7 +116,12 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 	}
 	moveIndex := 0
 	if p.ai {
-		moveIndex = p.aiGenerateNextMove(*allMoves, xWinset, yWinset, dWinset)
+		// NOTE: TEMP
+		//
+		//
+		fmt.Println("All Moves: ", *allMoves)
+		fmt.Println("My moves: ", p.moveset)
+		fmt.Println("Your moves: ", oppMoves)
 	} else { // Human input
 		passCnt := 0
 		moveIndex = inputHelper(p.char)
@@ -141,9 +147,9 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 	p.moveset = append(p.moveset, moveIndex)
 	p.turnCnt++
 	if p.turnCnt > 2 {
-		dWin, _ := comparator(dWinset, p.moveset, false)
-		xWin, _ := comparator(xWinset, p.moveset, false)
-		yWin, _ := comparator(yWinset, p.moveset, false)
+		dWin := comparator(dWinset, p.moveset)
+		xWin := comparator(xWinset, p.moveset)
+		yWin := comparator(yWinset, p.moveset)
 		if dWin || xWin || yWin {
 			p.win = true
 			return true
@@ -154,39 +160,8 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int) bool {
 	return false
 }
 
-func (ai *player) aiGenerateNextMove(allMoves []int, xSet, ySet, dSet [3][3]int) int {
-	prepMoves := allMoves[1:]
-	fmt.Println(prepMoves)
-	// Check Win Condition
-	res, matches := ai.CheckCanWin(xSet, ySet, dSet)
-	fmt.Println(res, matches)
-	switch res {
-	case 0:
-		rand.Seed(time.Now().UnixNano()) // NOTE: TEMP
-		return rand.Intn(8) + 1
-	case 1:
-		// xwin
-	case 2:
-		// ywin
-	case 3:
-		// dwin
-	}
-	return 0
-}
-
-func (ai *player) CheckCanWin(xSet, ySet, dSet [3][3]int) (int, []int) {
-	canWinX, xMtch := comparator(xSet, ai.moveset, true)
-	canWinY, yMtch := comparator(ySet, ai.moveset, true)
-	canWinD, dMtch := comparator(dSet, ai.moveset, true)
-	if canWinX {
-		return 1, xMtch
-	} else if canWinY {
-		return 2, yMtch
-	} else if canWinD {
-		return 3, dMtch
-	} else {
-		return 0, []int{}
-	}
+func test() {
+	// NOTE: TEMP
 }
 
 func inputHelper(playerName string) int {
@@ -206,27 +181,20 @@ func inputHelper(playerName string) int {
 	return moveIndex
 }
 
-func comparator(winset [3][3]int, moveset []int, aiCheckFlag bool) (bool, []int) {
+func comparator(winset [3][3]int, moveset []int) bool {
 	// Returns true if moves match a single row in winset (3 in a row).
 	for _, row := range winset {
 		matchCnt := 0
-		matches := []int{}
 		for _, val := range row {
 			for _, move := range moveset {
 				if val == move {
 					matchCnt++
-					matches = append(matches, move)
 				}
 			}
 		}
-		if aiCheckFlag {
-			if matchCnt == 2 {
-				return true, matches
-			}
-		}
 		if matchCnt == 3 {
-			return true, matches
+			return true
 		}
 	}
-	return false, []int{}
+	return false
 }
