@@ -56,18 +56,20 @@ func generatePlayersRandomStart(aiFlag *bool) (player, player) {
 	randRes := rand.Intn(2)
 	p1Char, p2Char := "X", "O"
 	if randRes == 1 {
-		//p1Char, p2Char = "O", "X" // NOTE: TEMP
+		p1Char, p2Char = "O", "X" // NOTE: TEMP CMMT
 	}
-	p1 := player{[]int{1, 3, 5}, 0, false, p1Char, false} // NOTE: sim near-win
-	p2 := player{[]int{2, 6, 7}, 0, false, p2Char, false} //
+	// p1 := player{[]int{1, 3, 5}, 0, false, p1Char, false} // NOTE: sim near-win
+	// p2 := player{[]int{2, 6, 7}, 0, false, p2Char, false} //
+	p1 := player{[]int{}, 0, false, p1Char, false}
+	p2 := player{[]int{}, 0, false, p2Char, false}
 	if *aiFlag {
-		p2.ai = true
-		// anoRes := rand.Intn(2) // NOTE: TEMP
-		// if anoRes == 1 {
-		// 	p1.ai = true
-		// } else {
-		// 	p2.ai = true
-		// }
+		// p2.ai = true
+		anoRes := rand.Intn(2) // NOTE: TEMP CMMT
+		if anoRes == 1 {
+			p1.ai = true
+		} else {
+			p2.ai = true
+		}
 	}
 	return p1, p2
 }
