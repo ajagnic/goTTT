@@ -1,3 +1,10 @@
+/*TODO
+----- detect tie game before 10 turns
+----- computer opponent
+		* reaction plays
+		* prediction plays
+----- computer v. computer
+*/
 package main
 
 import (
@@ -30,6 +37,8 @@ func main() {
 		fmt.Println(row)
 	}
 	p1, p2 := generatePlayersRandomStart(aiFlag)
+	// p1 := player{[]int{1, 3, 5}, 3, false, "X", true} // NOTE: sim near-win
+	// p2 := player{[]int{2, 6, 7}, 3, false, "O", false}
 	winFlag := false
 	for winFlag == false { // Turn management
 		winFlag = p1.collectPlayAndCheckWin(&allMoves, p2.moveset)
@@ -56,15 +65,12 @@ func generatePlayersRandomStart(aiFlag *bool) (player, player) {
 	randRes := rand.Intn(2)
 	p1Char, p2Char := "X", "O"
 	if randRes == 1 {
-		p1Char, p2Char = "O", "X" // NOTE: TEMP CMMT
+		p1Char, p2Char = "O", "X"
 	}
-	// p1 := player{[]int{1, 3, 5}, 0, false, p1Char, false} // NOTE: sim near-win
-	// p2 := player{[]int{2, 6, 7}, 0, false, p2Char, false} //
 	p1 := player{[]int{}, 0, false, p1Char, false}
 	p2 := player{[]int{}, 0, false, p2Char, false}
 	if *aiFlag {
-		// p2.ai = true
-		anoRes := rand.Intn(2) // NOTE: TEMP CMMT
+		anoRes := rand.Intn(2)
 		if anoRes == 1 {
 			p1.ai = true
 		} else {
@@ -121,12 +127,10 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 		// NOTE: TEMP
 		//
 		//
-		fmt.Println("All Moves: ", *allMoves)
-		fmt.Println("My moves: ", p.moveset)
+		fmt.Println("All moves: ", *allMoves)
 		fmt.Println("Your moves: ", oppMoves)
-		rand.Seed(time.Now().UnixNano())
-		moveIndex = rand.Intn(9) + 1
-		fmt.Println("Made move: ", moveIndex)
+		fmt.Println("\nMy("+p.char+") moves: ", p.moveset)
+		moveIndex = magic(allMoves, oppMoves)
 	} else { // Human input
 		passCnt := 0
 		moveIndex = inputHelper(p.char)
@@ -165,10 +169,29 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 	return false
 }
 
-func test() {
-	// e. players moves
-	// available moves/spaces
-	// check win state
+func magic(allMoves *[]int, oppMoves []int) int {
+	fmt.Println("magic")
+	bestMove := 5
+	if len(*allMoves) <= 2 { // First moves
+		res := checkOpponentMoves(oppMoves, bestMove)
+		if res = false {
+			//
+		}
+	}
+	return bestMove
+}
+
+func checkOpponentMoves(oppMoves []int, checkMove int) bool {
+	cnt := 0
+	for _, move := range oppMoves {
+		if move != checkMove {
+			cnt++
+		}
+	}
+	if cnt == len(oppMoves) {
+		return true
+	}
+	return false
 }
 
 func inputHelper(playerName string) int {
