@@ -169,23 +169,22 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 	return false
 }
 
-func magic(allMoves *[]int, oppMoves []int) int {
+func magic(allMoves *[]int, oppMoves []int) {
 	fmt.Println("magic")
-	bestMove := 5
+	bestMoves := []int{5, 1, 3, 7, 9}
 	if len(*allMoves) <= 2 { // First moves
-		res := checkOpponentMoves(oppMoves, bestMove)
-		if res = false {
+		res := checkOpponentMoves(oppMoves, bestMoves)
+		if res == false {
 			//
 		}
 	}
-	return bestMove
 }
 
-func checkOpponentMoves(oppMoves []int, checkMove int) bool {
+func checkOpponentMoves(oppMoves []int, checkMoves []int) bool {
 	cnt := 0
-	for _, move := range oppMoves {
-		if move != checkMove {
-			cnt++
+	for _, oppMove := range oppMoves {
+		for _, move := range checkMoves {
+			//
 		}
 	}
 	if cnt == len(oppMoves) {
