@@ -116,6 +116,7 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 	moveIndex := 0
 	if p.ai {
 		moveIndex = p.magic(oppMoves, allMoves)
+		fmt.Println("Computer moves: " + strconv.Itoa(moveIndex))
 	} else { // Human input
 		passCnt := 0
 		moveIndex = inputHelper(p.char)
@@ -142,9 +143,9 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 	p.moveset = append(p.moveset, moveIndex)
 	p.turnCnt++
 	if p.turnCnt > 2 {
-		dWin := comparator(dWinset, p.moveset)
-		xWin := comparator(xWinset, p.moveset)
-		yWin := comparator(yWinset, p.moveset)
+		dWin, _ := comparator(dWinset, p.moveset, false, allMoves)
+		xWin, _ := comparator(xWinset, p.moveset, false, allMoves)
+		yWin, _ := comparator(yWinset, p.moveset, false, allMoves)
 		if dWin || xWin || yWin {
 			p.win = true
 			return true
@@ -156,23 +157,52 @@ func (p *player) collectPlayAndCheckWin(allMoves *[]int, oppMoves []int) bool {
 }
 
 func (p *player) magic(oppMoves []int, allMoves *[]int) int {
+	xWinset := [3][3]int{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+	yWinset := [3][3]int{
+		{1, 4, 7},
+		{2, 5, 8},
+		{3, 6, 9},
+	}
+	dWinset := [3][3]int{
+		{1, 5, 9},
+		{3, 5, 7},
+		{},
+	}
 	fmt.Println("All your base are belong to us!")
+	// Starting moves
 	if len(oppMoves) == 0 {
 		return 5
-	} else if len(oppMoves) >= 1 {
+	} else if len(oppMoves) == 1 {
 		for true {
 			moves := []int{1, 3, 7, 9}
 			rand.Seed(time.Now().UnixNano())
 			randRes := rand.Intn(4)
 			if isNewMove(moves[randRes], allMoves) {
+				fmt.Println("return from start moves")
 				return moves[randRes]
 			}
 		}
 	}
 	//handle random mid-game move
 	//
-	//handle winning move
-	//
+	//Finishing moves
+	if len(p.moveset) >= 2 {
+		xWin, xMove := comparator(xWinset, p.moveset, true, allMoves)
+		yWin, yMove := comparator(yWinset, p.moveset, true, allMoves)
+		dWin, dMove := comparator(dWinset, p.moveset, true, allMoves)
+		if xWin {
+			return xMove
+		} else if yWin {
+			return yMove
+		} else if dWin {
+			return dMove
+		}
+	}
+	fmt.Println("returning 0")
 	return 0
 }
 
@@ -202,20 +232,27 @@ func inputHelper(playerName string) int {
 	return moveIndex
 }
 
-func comparator(winset [3][3]int, moveset []int) bool {
+func comparator(winset [3][3]int, moveset []int, checkWin bool, allMoves *[]int) (bool, int) {
 	// Returns true if moves match a single row in winset (3 in a row).
 	for _, row := range winset {
 		matchCnt := 0
-		for _, val := range row {
+		for i, val := range row {
 			for _, move := range moveset {
 				if val == move {
 					matchCnt++
+					if checkWin {
+						if matchCnt == 2 {
+							if isNewMove(row[i+1], allMoves) {
+								return true, row[i+1]
+							}
+						}
+					}
 				}
 			}
 		}
 		if matchCnt == 3 {
-			return true
+			return true, 0
 		}
 	}
-	return false
+	return false, 0
 }
