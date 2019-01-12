@@ -1,3 +1,6 @@
+/*
+*	due for revision/rewrite
+ */
 package main
 
 import (
@@ -182,27 +185,43 @@ func (p *player) magic(oppMoves []int, allMoves *[]int) int {
 			rand.Seed(time.Now().UnixNano())
 			randRes := rand.Intn(4)
 			if isNewMove(moves[randRes], allMoves) {
-				fmt.Println("return from start moves")
 				return moves[randRes]
 			}
 		}
 	}
-	//handle random mid-game move
-	//
 	//Finishing moves
 	if len(p.moveset) >= 2 {
 		xWin, xMove := comparator(xWinset, p.moveset, true, allMoves)
 		yWin, yMove := comparator(yWinset, p.moveset, true, allMoves)
 		dWin, dMove := comparator(dWinset, p.moveset, true, allMoves)
 		if xWin {
+			fmt.Println("ret x")
+			fmt.Println(xMove)
 			return xMove
 		} else if yWin {
+			fmt.Println("ret y")
+			fmt.Println(yMove)
 			return yMove
 		} else if dWin {
+			fmt.Println("ret d")
+			fmt.Println(dMove)
 			return dMove
 		}
 	}
-	fmt.Println("returning 0")
+	//
+	// handle mid-game moves NOTE: TEMP
+	backup := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	for true {
+		rand.Seed(time.Now().UnixNano())
+		idx := rand.Intn(9)
+		move := backup[idx]
+		fmt.Println(move)
+		if isNewMove(move, allMoves) {
+			fmt.Println("RANDOM MOVE")
+			return move
+		}
+	}
+	fmt.Println("RETURNING 0")
 	return 0
 }
 
@@ -236,14 +255,19 @@ func comparator(winset [3][3]int, moveset []int, checkWin bool, allMoves *[]int)
 	// Returns true if moves match a single row in winset (3 in a row).
 	for _, row := range winset {
 		matchCnt := 0
-		for i, val := range row {
+		for _, val := range row {
 			for _, move := range moveset {
 				if val == move {
 					matchCnt++
 					if checkWin {
 						if matchCnt == 2 {
-							if isNewMove(row[i+1], allMoves) {
-								return true, row[i+1]
+							// if isNewMove(row[i+1], allMoves) {
+							// 	return true, row[i+1]
+							// }
+							for _, blah := range row {
+								if isNewMove(blah, allMoves) {
+									return true, blah
+								}
 							}
 						}
 					}
