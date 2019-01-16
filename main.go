@@ -1,6 +1,9 @@
 /*
 *	due for revision/rewrite
- */
+	- separate game funcs and player funcs into diff files
+	- legibility/variable name clarity
+	- code flexibility
+*/
 package main
 
 import (
@@ -180,6 +183,9 @@ func (p *player) magic(oppMoves []int, allMoves *[]int) int {
 	if len(oppMoves) == 0 {
 		return 5
 	} else if len(oppMoves) == 1 {
+		if oppMoves[0] != 5 && p.moveset[0] != 5 {
+			return 5
+		}
 		for true {
 			moves := []int{1, 3, 7, 9}
 			rand.Seed(time.Now().UnixNano())
