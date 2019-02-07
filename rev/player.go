@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -30,4 +32,51 @@ func generatePlayersRandomStart() (player, player) {
 		}
 	}
 	return p1, p2
+}
+
+func (p *player) collectPlay() bool {
+	moveIndex := 0
+	if p.isAI {
+		//
+	} else {
+		validatingMove := true
+		moveIndex = p.inputHelper()
+		for validatingMove {
+			for _, move := range allPlayedMoves {
+				if moveIndex > 9 {
+					moveIndex = 0
+				}
+				if move == moveIndex {
+					fmt.Println("Move already played.")
+					moveIndex = p.inputHelper()
+					break
+				}
+			}
+			validatingMove = false
+		}
+	}
+	allPlayedMoves = append(allPlayedMoves, moveIndex)
+	p.moves = append(p.moves, moveIndex)
+	p.turns++
+	if p.turns > 2 {
+		return p.checkWin()
+	}
+	return false
+}
+
+func (p player) inputHelper() int {
+	var input string
+	fmt.Println(p.token, "'s turn.")
+	fmt.Scanln(&input)
+	moveIndex, err := strconv.Atoi(input)
+	for err != nil {
+		fmt.Println("Please input a number from 0-9.")
+		fmt.Scanln(&input)
+		moveIndex, err = strconv.Atoi(input)
+	}
+	return moveIndex
+}
+
+func (p *player) checkWin() bool {
+	return false
 }
