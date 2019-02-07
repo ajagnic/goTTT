@@ -42,17 +42,15 @@ func (p *player) collectPlay() bool {
 		validatingMove := true
 		moveIndex = p.inputHelper()
 		for validatingMove {
-			for _, move := range allPlayedMoves {
-				if moveIndex > 9 {
-					moveIndex = 0
-				}
-				if move == moveIndex {
-					fmt.Println("Move already played.")
-					moveIndex = p.inputHelper()
-					break
-				}
+			if moveIndex > 9 {
+				moveIndex = 0
 			}
-			validatingMove = false
+			if isNewMove(moveIndex) {
+				validatingMove = false
+			} else {
+				fmt.Println("Move invalid or already played.")
+				moveIndex = p.inputHelper()
+			}
 		}
 	}
 	allPlayedMoves = append(allPlayedMoves, moveIndex)

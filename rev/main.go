@@ -18,7 +18,7 @@ func main() {
 	}
 	p1, p2 := generatePlayersRandomStart()
 	winner := false
-	for winner == false { // dryer way than this
+	for winner == false {
 		winner = p1.collectPlay()
 		displayGame([]player{p1, p2})
 		if winner == false {
@@ -52,4 +52,33 @@ func displayGame(players []player) {
 	for _, row := range board {
 		fmt.Println(row)
 	}
+}
+
+func isNewMove(move int) bool {
+	for _, idx := range allPlayedMoves {
+		if move == idx {
+			return false
+		}
+	}
+	return true
+}
+
+func comparator(moveSet []int) bool { // breakdown to make most useful
+	winSets := [3][3][3]int{x, y, d}
+	for _, set := range winSets {
+		for _, row := range set {
+			matchCount := 0
+			for _, val := range row {
+				for _, move := range moveSet {
+					if val == move {
+						matchCount++
+					}
+				}
+			}
+			if matchCount == 3 {
+				return true
+			}
+		}
+	}
+	return false
 }
