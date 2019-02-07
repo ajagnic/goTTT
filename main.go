@@ -1,9 +1,3 @@
-/*
-*	due for revision/rewrite
-	- separate game funcs and player funcs into diff files
-	- legibility/variable name clarity
-	- code flexibility
-*/
 package main
 
 import (
@@ -215,7 +209,7 @@ func (p *player) magic(oppMoves []int, allMoves *[]int) int {
 		}
 	}
 	//
-	// handle mid-game moves NOTE: TEMP
+	// handle mid-game moves NOTE: TEMP, replace with defense?
 	backup := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	for true {
 		rand.Seed(time.Now().UnixNano())
