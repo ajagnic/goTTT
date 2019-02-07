@@ -63,7 +63,7 @@ func isNewMove(move int) bool {
 	return true
 }
 
-func comparator(moveSet []int) bool { // breakdown to make most useful
+func comparator(moveSet []int, checkForWin bool) (bool, int) {
 	winSets := [3][3][3]int{x, y, d}
 	for _, set := range winSets {
 		for _, row := range set {
@@ -75,10 +75,19 @@ func comparator(moveSet []int) bool { // breakdown to make most useful
 					}
 				}
 			}
+			if checkForWin {
+				if matchCount == 2 {
+					for _, idx := range row {
+						if isNewMove(idx) {
+							return true, idx
+						}
+					}
+				}
+			}
 			if matchCount == 3 {
-				return true
+				return true, 0
 			}
 		}
 	}
-	return false
+	return false, 0
 }
