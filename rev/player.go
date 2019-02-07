@@ -76,5 +76,11 @@ func (p player) inputHelper() int {
 }
 
 func (p *player) checkWin() bool {
-	return false
+	win, _ := comparator(p.moves, false)
+	if win {
+		p.win = true
+	} else if len(allPlayedMoves) == 10 {
+		return true
+	}
+	return win
 }
