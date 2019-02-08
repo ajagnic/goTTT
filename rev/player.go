@@ -15,15 +15,15 @@ type player struct {
 	win   bool
 }
 
-func generatePlayersRandomStart() (player, player) {
+func generatePlayersRandomStart() (p1, p2 player) {
 	rand.Seed(time.Now().UnixNano())
 	rng := rand.Intn(2)
 	token1, token2 := "X", "O"
 	if rng == 1 {
 		token1, token2 = token2, token1
 	}
-	p1 := player{token1, []int{}, 0, false, false}
-	p2 := player{token2, []int{}, 0, false, false}
+	p1 = player{token1, []int{}, 0, false, false}
+	p2 = player{token2, []int{}, 0, false, false}
 	if *aiFlag {
 		rng2 := rand.Intn(2)
 		p1.isAI = true
@@ -31,7 +31,7 @@ func generatePlayersRandomStart() (player, player) {
 			p1.isAI, p2.isAI = false, true
 		}
 	}
-	return p1, p2
+	return
 }
 
 func (p *player) collectPlay() bool {
@@ -62,7 +62,7 @@ func (p *player) collectPlay() bool {
 	return false
 }
 
-func (p player) inputHelper() int {
+func (p player) inputHelper() (moveIndex int) {
 	var input string
 	fmt.Println(p.token, "'s turn.")
 	fmt.Scanln(&input)
@@ -72,7 +72,7 @@ func (p player) inputHelper() int {
 		fmt.Scanln(&input)
 		moveIndex, err = strconv.Atoi(input)
 	}
-	return moveIndex
+	return
 }
 
 func (p *player) checkWin() bool {
