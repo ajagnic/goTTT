@@ -9,7 +9,7 @@ import (
 
 type player struct {
 	token string
-	moves []int // possibly make fixed array||sized slice w/ make
+	moves []int
 	turns int
 	isAI  bool
 	win   bool
@@ -37,7 +37,7 @@ func generatePlayersRandomStart() (p1, p2 player) {
 func (p *player) collectPlay() (win bool) {
 	moveIndex := 0
 	if p.isAI {
-		//
+		moveIndex = p.generatePlay()
 	} else {
 		validatingMove := true
 		moveIndex = p.inputHelper()
@@ -61,6 +61,16 @@ func (p *player) collectPlay() (win bool) {
 		win = p.checkWin()
 	}
 	return
+}
+
+func (p player) generatePlay() int {
+	// 1. Check for self win, ret win move
+	// 2. Check for opp win, ret win move (block)
+	// 3. Attempt self fork(2 possible wins), ret move
+	// 4. Return center(5)
+	// 5. Ret corner opposite to opp
+	// 6. Ret random
+	return 0
 }
 
 func (p player) inputHelper() (moveIndex int) {
