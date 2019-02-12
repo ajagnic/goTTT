@@ -34,7 +34,7 @@ func generatePlayersRandomStart() (p1, p2 player) {
 	return
 }
 
-func (p *player) collectPlay() bool {
+func (p *player) collectPlay() (win bool) {
 	moveIndex := 0
 	if p.isAI {
 		//
@@ -56,10 +56,11 @@ func (p *player) collectPlay() bool {
 	allPlayedMoves = append(allPlayedMoves, moveIndex)
 	p.moves = append(p.moves, moveIndex)
 	p.turns++
+	win = false
 	if p.turns > 2 {
-		return p.checkWin()
+		win = p.checkWin()
 	}
-	return false
+	return
 }
 
 func (p player) inputHelper() (moveIndex int) {
