@@ -6,10 +6,10 @@ import (
 )
 
 var aiFlag = flag.Bool("PvC", false, "Computer Opponent") // CvC
-var allPlayedMoves = []int{0}
 var x = [3][3]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
 var y = [3][3]int{{1, 4, 7}, {2, 5, 8}, {3, 6, 9}}
 var d = [3][3]int{{1, 5, 9}, {3, 5, 7}, {}}
+var allPlayedMoves = []int{0, 3, 5} // TEMP
 var p1 player
 var p2 player
 
@@ -81,7 +81,7 @@ func comparator(moveSet []int, checkForWin bool) (bool, int) {
 			if checkForWin {
 				if matchCount == 2 {
 					for _, idx := range row {
-						if isNewMove(idx) { // last move can be returned w/o this call
+						if isNewMove(idx) {
 							return true, idx
 						}
 					}

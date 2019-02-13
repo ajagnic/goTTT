@@ -22,15 +22,15 @@ func generatePlayersRandomStart() (p1, p2 player) {
 	if rng == 1 {
 		token1, token2 = token2, token1
 	}
-	p1 = player{token1, []int{}, 0, false, false}
-	p2 = player{token2, []int{}, 0, false, false}
-	if *aiFlag {
-		rng2 := rand.Intn(2)
-		p1.isAI = true
-		if rng2 == 1 {
-			p1.isAI, p2.isAI = false, true
-		}
-	}
+	p2 = player{"X", []int{3, 5}, 2, true, false} // TEMP, !SWAPPED P VARS!
+	p1 = player{"O", []int{}, 0, false, false}
+	// if *aiFlag {
+	// 	rng2 := rand.Intn(2)
+	// 	p1.isAI = true
+	// 	if rng2 == 1 {
+	// 		p1.isAI, p2.isAI = false, true
+	// 	}
+	// }
 	return
 }
 
@@ -38,6 +38,7 @@ func (p *player) collectPlay() (win bool) {
 	moveIndex := 0
 	if p.isAI {
 		moveIndex = p.generatePlay()
+		fmt.Println("Comp made move: ", moveIndex)
 	} else {
 		validatingMove := true
 		moveIndex = p.inputHelper()
@@ -65,6 +66,10 @@ func (p *player) collectPlay() (win bool) {
 
 func (p player) generatePlay() int {
 	// 1. Check for self win, ret win move
+	res, move := comparator(p.moves, true)
+	if res {
+		return move
+	}
 	// 2. Check for opp win, ret win move (block)
 	// 3. Attempt self fork(2 possible wins), ret move
 	// 4. Return center(5)
