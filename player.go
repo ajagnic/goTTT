@@ -13,6 +13,7 @@ type player struct {
 	turns int
 	isAI  bool
 	win   bool
+	id    int
 }
 
 func generatePlayersRandomStart() (p1, p2 player) {
@@ -22,15 +23,17 @@ func generatePlayersRandomStart() (p1, p2 player) {
 	if rng == 1 {
 		token1, token2 = token2, token1
 	}
-	p2 = player{"X", []int{3, 5}, 2, true, false} // TEMP, !SWAPPED P VARS!
-	p1 = player{"O", []int{}, 0, false, false}
-	// if *aiFlag {
-	// 	rng2 := rand.Intn(2)
-	// 	p1.isAI = true
-	// 	if rng2 == 1 {
-	// 		p1.isAI, p2.isAI = false, true
-	// 	}
-	// }
+	p1 = player{token1, []int{}, 0, false, false, 1}
+	p2 = player{token2, []int{}, 0, false, false, 2}
+	if *aiFlag {
+		rng2 := rand.Intn(2)
+		p1.isAI = true
+		if rng2 == 1 {
+			p1.isAI, p2.isAI = false, true
+		}
+	} else if *cvcFlag {
+		p1.isAI, p2.isAI = true, true
+	}
 	return
 }
 
@@ -65,17 +68,33 @@ func (p *player) collectPlay() (win bool) {
 }
 
 func (p player) generatePlay() int {
-	// 1. Check for self win, ret win move
-	res, move := comparator(p.moves, true)
-	if res {
+	var opp player
+	myID := p.id
+	if myID == 1 {
+		opp = p2
+	} else {
+		opp = p1
+	}
+	iWin, move := comparator(p.moves, true)
+	if iWin {
 		return move
 	}
-	// 2. Check for opp win, ret win move (block)
-	// 3. Attempt self fork(2 possible wins), ret move
-	// 4. Return center(5)
-	// 5. Ret corner opposite to opp
-	// 6. Ret random
-	return 0
+	oppWin, move := comparator(opp.moves, true)
+	if oppWin {
+		return move
+	}
+	//
+	// Attempt self fork(2 possible wins) here, ret move
+	//
+	if isNewMove(5) {
+		return 5
+	}
+	rand.Seed(time.Now().UnixNano())
+	rng := rand.Intn(9) + 1
+	for !isNewMove(rng) {
+		rng = rand.Intn(9) + 1
+	}
+	return rng
 }
 
 func (p player) inputHelper() (moveIndex int) {
