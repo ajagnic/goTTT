@@ -41,7 +41,7 @@ func (p *player) collectPlay() (win bool) {
 	moveIndex := 0
 	if p.isAI {
 		moveIndex = p.generatePlay()
-		fmt.Println("Comp made move: ", moveIndex)
+		fmt.Println("Move: ", moveIndex)
 	} else {
 		validatingMove := true
 		moveIndex = p.inputHelper()

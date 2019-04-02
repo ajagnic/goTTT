@@ -27,7 +27,7 @@ func main() {
 		}
 	}
 	if p1.win {
-		fmt.Println(p1.token, " Wins.") // replace w/ custom print, printf
+		fmt.Println(p1.token, " Wins.")
 	} else if p2.win {
 		fmt.Println(p2.token, " Wins.")
 	} else {
