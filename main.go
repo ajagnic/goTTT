@@ -12,28 +12,29 @@ var p1 player
 var p2 player
 
 func main() {
-	flag.Parse()
-	for _, row := range [3][3]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}} {
-		fmt.Println(row)
-	}
-	p1, p2 = generatePlayersRandomStart()
-	winner := false
-	for winner == false {
-		winner = p1.collectPlay()
-		displayGame()
-		if winner == false {
-			winner = p2.collectPlay()
-			displayGame()
-		}
-	}
-	if p1.win {
-		fmt.Println(p1.token, " Wins.")
-	} else if p2.win {
-		fmt.Println(p2.token, " Wins.")
-	} else {
-		fmt.Println("Tie Game.")
-	}
-	fmt.Scanln()
+	test()
+	// flag.Parse()
+	// for _, row := range [3][3]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}} {
+	// 	fmt.Println(row)
+	// }
+	// p1, p2 = generatePlayersRandomStart()
+	// winner := false
+	// for winner == false {
+	// 	winner = p1.collectPlay()
+	// 	displayGame()
+	// 	if winner == false {
+	// 		winner = p2.collectPlay()
+	// 		displayGame()
+	// 	}
+	// }
+	// if p1.win {
+	// 	fmt.Println(p1.token, " Wins.")
+	// } else if p2.win {
+	// 	fmt.Println(p2.token, " Wins.")
+	// } else {
+	// 	fmt.Println("Tie Game.")
+	// }
+	// fmt.Scanln()
 }
 
 func displayGame() {
