@@ -83,9 +83,6 @@ func (p player) generatePlay() int {
 	if oppWin {
 		return move
 	}
-	//
-	// Attempt self fork(2 possible wins) here, ret move
-	//
 	if isNewMove(5) {
 		return 5
 	}
