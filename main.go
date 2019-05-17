@@ -5,6 +5,8 @@ import (
 	"fmt"
 )
 
+var testFlag = flag.Bool("t", false, "testflag") // TEMP
+
 var aiFlag = flag.Bool("pvc", false, "Computer Opponent")
 var cvcFlag = flag.Bool("cvc", false, "Computer vs Computer")
 var allPlayedMoves = []int{0}
@@ -12,33 +14,37 @@ var p1 player
 var p2 player
 
 func main() {
-	test()
-	// flag.Parse()
-	// for _, row := range [3][3]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}} {
-	// 	fmt.Println(row)
-	// }
-	// p1, p2 = generatePlayersRandomStart()
-	// winner := false
-	// for winner == false {
-	// 	winner = p1.collectPlay()
-	// 	displayGame()
-	// 	if winner == false {
-	// 		winner = p2.collectPlay()
-	// 		displayGame()
-	// 	}
-	// }
-	// if p1.win {
-	// 	fmt.Println(p1.token, " Wins.")
-	// } else if p2.win {
-	// 	fmt.Println(p2.token, " Wins.")
-	// } else {
-	// 	fmt.Println("Tie Game.")
-	// }
-	// fmt.Scanln()
+	flag.Parse()
+	if *testFlag {
+		test()
+	} else {
+		p1, p2 = generatePlayersRandomStart()
+		winner := false
+		for _, row := range [3][3]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}} {
+			fmt.Println(row)
+		}
+		for winner == false {
+			winner = p1.collectPlay()
+			displayGame()
+			if winner == false {
+				winner = p2.collectPlay()
+				displayGame()
+			}
+		}
+		if p1.win {
+			fmt.Println(p1.token, " Wins.")
+		} else if p2.win {
+			fmt.Println(p2.token, " Wins.")
+		} else {
+			fmt.Println("Tie Game.")
+		}
+		fmt.Scanln()
+	}
 }
 
 func displayGame() {
 	board := [3][3]string{{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}}
+	t := "	"
 	for _, p := range [2]player{p1, p2} {
 		for _, move := range p.moves {
 			if move <= 3 {
@@ -51,7 +57,7 @@ func displayGame() {
 		}
 	}
 	for _, row := range board {
-		fmt.Println(row)
+		fmt.Println(t, row)
 	}
 }
 

@@ -39,6 +39,7 @@ func generatePlayersRandomStart() (p1, p2 player) {
 
 func (p *player) collectPlay() (win bool) {
 	moveIndex := 0
+	win = false
 	if p.isAI {
 		moveIndex = p.generatePlay()
 		fmt.Println("Move: ", moveIndex)
@@ -60,7 +61,6 @@ func (p *player) collectPlay() (win bool) {
 	allPlayedMoves = append(allPlayedMoves, moveIndex)
 	p.moves = append(p.moves, moveIndex)
 	p.turns++
-	win = false
 	if p.turns > 2 {
 		win = p.checkWin()
 	}
