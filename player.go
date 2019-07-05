@@ -47,7 +47,7 @@ func (p *player) collectPlay() (win bool) {
 		validatingMove := true
 		moveIndex = p.inputHelper()
 		for validatingMove {
-			if moveIndex > 9 {
+			if moveIndex < 0 || moveIndex > 9 {
 				moveIndex = 0
 			}
 			if isNewMove(moveIndex) {

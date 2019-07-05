@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 var idCounter int
+var allGames []game
 
 type game struct {
 	id    int
@@ -11,8 +12,11 @@ type game struct {
 
 func test() {
 	fmt.Println("test")
-	g := newGame()
-	fmt.Println(g)
+	for range [10]int{} {
+		g := newGame()
+		allGames = append(allGames, g)
+	}
+	fmt.Println(allGames)
 }
 
 func newGame() game {
