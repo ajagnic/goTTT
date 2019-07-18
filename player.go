@@ -44,24 +44,17 @@ func (p *player) collectPlay() (win bool) {
 		moveIndex = p.generatePlay()
 		fmt.Println("\nComputer: ", moveIndex)
 	} else {
-		if p.turns == 4 {
-			flg, move := comparator(p.moves, true)
-			if flg {
-				moveIndex = move
+		validatingMove := true
+		moveIndex = p.inputHelper()
+		for validatingMove {
+			if moveIndex < 0 || moveIndex > 9 {
+				moveIndex = 0
 			}
-		} else {
-			validatingMove := true
-			moveIndex = p.inputHelper()
-			for validatingMove {
-				if moveIndex < 0 || moveIndex > 9 {
-					moveIndex = 0
-				}
-				if isNewMove(moveIndex) {
-					validatingMove = false
-				} else {
-					fmt.Println("Move invalid or already played.")
-					moveIndex = p.inputHelper()
-				}
+			if isNewMove(moveIndex) {
+				validatingMove = false
+			} else {
+				fmt.Println("Move invalid or already played.")
+				moveIndex = p.inputHelper()
 			}
 		}
 	}
@@ -87,7 +80,7 @@ func (p player) generatePlay() int {
 			for i := 0; i < 145; i++ {
 				fmt.Print(".")
 				if i%48 == 0 {
-					fmt.Println("")
+					fmt.Print("\n")
 				}
 				time.Sleep(5 * time.Millisecond)
 			}

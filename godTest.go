@@ -2,24 +2,29 @@ package main
 
 import "fmt"
 
-var idCounter int
-var allGames []game
-
-type game struct {
-	id    int
-	board [9]int
-}
-
 func test() {
-	fmt.Println("test")
-	for range [10]int{} {
-		g := newGame()
-		allGames = append(allGames, g)
+	allBoards := [][]int{}
+	//enemy moves first, comp must compute all paths
+	man := player{"X", []int{1, 2, 3, 4, 5, 6, 7}, 7, false, false, 1}
+	_ = player{"O", []int{}, 0, true, false, 2}
+
+	//create all boards w/ unique next moves
+	availMoves := man.getAvailableMoves()
+	for _, move := range availMoves {
+		allBoards = append(allBoards, []int{move})
 	}
-	fmt.Println(allGames)
+	fmt.Println(allBoards)
 }
 
-func newGame() game {
-	idCounter++
-	return game{idCounter, [9]int{}}
+func (p player) getAvailableMoves() (allMoves []int) {
+	allMoves = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	for _, pmove := range p.moves {
+		for i, amove := range allMoves {
+			if pmove == amove {
+				allMoves[i] = allMoves[len(allMoves)-1]
+				allMoves = allMoves[:len(allMoves)-1]
+			}
+		}
+	}
+	return
 }
