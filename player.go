@@ -42,19 +42,26 @@ func (p *player) collectPlay() (win bool) {
 	win = false
 	if p.isAI {
 		moveIndex = p.generatePlay()
-		fmt.Println("Move: ", moveIndex)
+		fmt.Println("\nComputer: ", moveIndex)
 	} else {
-		validatingMove := true
-		moveIndex = p.inputHelper()
-		for validatingMove {
-			if moveIndex < 0 || moveIndex > 9 {
-				moveIndex = 0
+		if p.turns == 4 {
+			flg, move := comparator(p.moves, true)
+			if flg {
+				moveIndex = move
 			}
-			if isNewMove(moveIndex) {
-				validatingMove = false
-			} else {
-				fmt.Println("Move invalid or already played.")
-				moveIndex = p.inputHelper()
+		} else {
+			validatingMove := true
+			moveIndex = p.inputHelper()
+			for validatingMove {
+				if moveIndex < 0 || moveIndex > 9 {
+					moveIndex = 0
+				}
+				if isNewMove(moveIndex) {
+					validatingMove = false
+				} else {
+					fmt.Println("Move invalid or already played.")
+					moveIndex = p.inputHelper()
+				}
 			}
 		}
 	}
@@ -75,6 +82,18 @@ func (p player) generatePlay() int {
 	} else {
 		opp = p1
 	}
+	if !*cvcFlag {
+		go func() {
+			for i := 0; i < 145; i++ {
+				fmt.Print(".")
+				if i%48 == 0 {
+					fmt.Println("")
+				}
+				time.Sleep(5 * time.Millisecond)
+			}
+		}()
+	}
+	time.Sleep(time.Second)
 	iWin, move := comparator(p.moves, true)
 	if iWin {
 		return move
