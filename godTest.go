@@ -31,8 +31,7 @@ func (p player) getAvailableMoves() (allMoves []int) {
 	for _, pmove := range p.moves {
 		for i, amove := range allMoves {
 			if pmove == amove {
-				allMoves[i] = allMoves[len(allMoves)-1]
-				allMoves = allMoves[:len(allMoves)-1]
+				allMoves = removeFromSlc(allMoves, i)
 			}
 		}
 	}
@@ -49,4 +48,8 @@ func generateBoardsForMoves(openMoves []int) (allBoards []board) {
 	return
 }
 
-func removeFromSlc() {}
+func removeFromSlc(slc []int, idx int) []int {
+	slc[idx] = slc[len(slc)-1]
+	slc = slc[:len(slc)-1]
+	return slc
+}
