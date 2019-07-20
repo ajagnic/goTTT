@@ -2,18 +2,28 @@ package main
 
 import "fmt"
 
-func test() {
-	allBoards := [][]int{}
-	//enemy moves first, comp must compute all paths
-	man := player{"X", []int{1, 2, 3, 4, 5, 6, 7}, 7, false, false, 1}
-	_ = player{"O", []int{}, 0, true, false, 2}
+type board struct {
+	moves []int
+	id    int
+}
 
-	//create all boards w/ unique next moves
-	availMoves := man.getAvailableMoves()
-	for _, move := range availMoves {
-		allBoards = append(allBoards, []int{move})
+var counter int
+
+func test() {
+	counter = 0
+	man := player{"X", []int{}, 0, false, false, 1}
+	comp := player{"O", []int{}, 0, true, false, 2}
+	manOpenMoves := man.getAvailableMoves()
+	fmt.Println(manOpenMoves)
+	manPossibleGames := generateBoardsForMoves(manOpenMoves)
+	fmt.Println(manPossibleGames)
+	for _, game := range manPossibleGames {
+		compOpenMoves := comp.getAvailableMoves()
+		fmt.Println(compOpenMoves)
+		compPossibleGames := generateBoardsForMoves(compOpenMoves)
+		fmt.Println(compPossibleGames)
 	}
-	fmt.Println(allBoards)
+
 }
 
 func (p player) getAvailableMoves() (allMoves []int) {
@@ -28,3 +38,15 @@ func (p player) getAvailableMoves() (allMoves []int) {
 	}
 	return
 }
+
+func generateBoardsForMoves(openMoves []int) (allBoards []board) {
+	for _, move := range openMoves {
+		moves := []int{move}
+		newBoard := board{moves, counter}
+		counter++
+		allBoards = append(allBoards, newBoard)
+	}
+	return
+}
+
+func removeFromSlc() {}
